@@ -15,6 +15,11 @@ namespace TestDataGenerator
             eXLSX
         };
 
+        public static int Write(DataSet dataSet, string filePath)
+        {
+            return Write(dataSet, filePath, GetVersion(filePath));
+        }
+
         public static int Write(DataSet dataSet, string filePath, EVersion eVersion)
         {
             string connectionString = GetConnectionString(filePath, eVersion);
@@ -34,8 +39,16 @@ namespace TestDataGenerator
 
                     for (int col = 0; col < table.Columns.Count; col++)
                     {
-                        colIdCollection += table.Columns[col].ColumnName;
-                        colValueCollection += table.Columns[col].ColumnName + " VARCHAR";
+                        colIdCollection += "[" + table.Columns[col].ColumnName + "]";
+
+                        string varType = "VARCHAR";
+                        
+                        if (table.Columns[col].DataType == typeof(int))
+                        {
+                            varType = "INT";
+                        }
+
+                        colValueCollection += "[" + table.Columns[col].ColumnName + "]" + " " + varType;
 
                         if (col + 1 < table.Columns.Count)
                         { 
@@ -57,7 +70,18 @@ namespace TestDataGenerator
 
                         for (int col = 0; col < table.Columns.Count; col++)
                         {
-                            rowValueCollection += "'" + table.Rows[row][col].ToString() + "'";
+                            string val;
+                            if (table.Columns[col].DataType == typeof(int))
+                            {
+                                val = table.Rows[row][col].ToString();
+                            }
+                            else
+                            {
+                                val = "'" + table.Rows[row][col].ToString() + "'";
+                            }
+
+
+                            rowValueCollection += val;
 
                             if (col + 1 < table.Columns.Count)
                             {

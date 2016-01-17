@@ -25,4 +25,51 @@ namespace TestDataGenerator
         eRight
     }
 
+    public static class Converter
+    {
+        public static string EFieldTypeToString(EFieldType eFieldType)
+        {
+            string str = string.Empty;
+
+            switch(eFieldType)
+            {
+                case EFieldType.eFieldText:
+                    str = "Text";
+                    break;
+                case EFieldType.eFieldImage:
+                    str = "Image";
+                    break;
+                case EFieldType.eFieldPath:
+                    str = "Path";
+                    break;
+                default:
+                    break;
+            }
+
+            return str;
+        }
+
+        public static string EAlignmentToString(EAlignment eAlignment)
+        {
+            string str = string.Empty;
+
+            switch (eAlignment)
+            {
+                case EAlignment.eLeft:
+                    str = "Left";
+                    break;
+                case EAlignment.eCenter:
+                    str = "Center";
+                    break;
+                case EAlignment.eRight:
+                    str = "Right";
+                    break;
+                default:
+                    break;
+            }
+
+            return str;
+        }
+    }
+
 }

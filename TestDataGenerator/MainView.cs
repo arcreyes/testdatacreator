@@ -284,8 +284,19 @@ namespace TestDataGenerator
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //string filePath = Directory.GetCurrentDirectory() + "\\" + "test.xlsx";
-            //Excel.Write(null, filePath, Excel.EVersion.eXLSX);
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+
+            saveFileDialog.Filter = "Excel 2013 (.xlsx)| *.xlsx | Excel 2003 (.xls) |*.xls ";
+            saveFileDialog.DefaultExt = "xlsx";
+
+            DialogResult result = saveFileDialog.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                DataSet ds = ConvertFieldInformationListToDataSet();
+
+                Excel.Write(ds, saveFileDialog.FileName);
+            }
         }
 
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)
@@ -298,6 +309,41 @@ namespace TestDataGenerator
             filePath = Directory.GetCurrentDirectory() + "\\" + "test2.xlsx";
             Excel.Write(ds, filePath, Excel.EVersion.eXLSX);
             
+        }
+
+        private DataSet ConvertFieldInformationListToDataSet()
+        {
+            DataSet ds = new DataSet();
+
+            DataTable table = new DataTable("fieldinfo");
+
+            table.Columns.Add("No#", typeof(int));
+            table.Columns.Add("Field Name", typeof(string));
+            table.Columns.Add("Left", typeof(int));
+            table.Columns.Add("Top", typeof(int));
+            table.Columns.Add("Right", typeof(int));
+            table.Columns.Add("Bottom", typeof(int));
+            table.Columns.Add("Alignment", typeof(string));
+            table.Columns.Add("Field Type", typeof(string));
+
+            int index = 0;
+            foreach (FieldInformation fieldInfo in fieldInformationList)
+            {
+                table.Rows.Add(index, 
+                    fieldInfo.FieldName, 
+                    fieldInfo.Position.Left, 
+                    fieldInfo.Position.Top,
+                    fieldInfo.Position.Right,
+                    fieldInfo.Position.Bottom,
+                    Converter.EAlignmentToString(fieldInfo.Alignment),
+                    Converter.EFieldTypeToString(fieldInfo.FieldType));
+
+                index++;
+            }
+
+            ds.Tables.Add(table);
+
+            return ds;
         }
     }
 }
