@@ -303,11 +303,13 @@ namespace TestDataGenerator
         {
             string filePath = Directory.GetCurrentDirectory() + "\\" + "test.xlsx";
 
-            DataSet ds = Excel.Read(filePath);
+            DialogResult result = openFileDialog1.ShowDialog();
 
+            if (result == DialogResult.OK)
+            {
+                DataSet ds = Excel.Read(openFileDialog1.FileName);
+            }
 
-            filePath = Directory.GetCurrentDirectory() + "\\" + "test2.xlsx";
-            Excel.Write(ds, filePath, Excel.EVersion.eXLSX);
             
         }
 
@@ -344,6 +346,60 @@ namespace TestDataGenerator
             ds.Tables.Add(table);
 
             return ds;
+        }
+
+        private void ConvertDataSetToFieldInformationList(DataSet ds)
+        {
+            foreach (DataTable table in ds.Tables)
+            {
+                string colName = string.Empty;
+
+                int no = -1;
+                string fieldName = string.Empty;
+                int left = -1;
+                int top = -1;
+                int right = -1;
+                int bottom = -1;
+                string alignment = string.Empty;
+                string fieldType = string.Empty;
+
+                for (int row = 0; row < table.Rows.Count; row++)
+                {
+                    for (int col = 0; col < table.Rows.Count; col++)
+                    {
+                        switch (table.Columns[col].ColumnName)
+                        {
+                            case "No#":
+                                no = int.Parse(table.Rows[row][col].ToString());
+                                break;
+                            case "Field Name":
+                                fieldName = table.Rows[row][col].ToString();
+                                break;
+                            case "Left":
+                                left = int.Parse(table.Rows[row][col].ToString());
+                                break;
+                            case "Top":
+                                top = int.Parse(table.Rows[row][col].ToString());
+                                break;
+                            case "Right":
+                                right = int.Parse(table.Rows[row][col].ToString());
+                                break;
+                            case "Bottom":
+                                bottom = int.Parse(table.Rows[row][col].ToString());
+                                break;
+                            case "Alignment":
+                                alignment = table.Rows[row][col].ToString();
+                                break;
+                            case "Field Type":
+                                fieldType = table.Rows[row][col].ToString();
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    }
+                }
+
         }
     }
 }
