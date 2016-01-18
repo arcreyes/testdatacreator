@@ -22,6 +22,23 @@ namespace TestDataGenerator
             listBoxFieldInformation.ValueMember = "FieldName";
             listBoxFieldInformation.DataSource = fieldInformationList;
 
+
+            //customPanel1.Location
+
+            Size clientSize = panel1.ClientSize;
+            clientSize.Width -= 2; // remove 1 pixel on each side
+            clientSize.Height -= 2; // remove 1 pixel on each side
+
+
+            int width = (int)((double)clientSize.Height * paperSize.Width / paperSize.Height + 0.5);
+            int height = panel1.ClientSize.Height-2;
+
+            customPanel1.Left = clientSize.Width / 2 - width / 2;
+            customPanel1.Top = 0;
+            customPanel1.ClientSize = new Size(width, height);
+
+                
+
             //textBoxFieldName.DataBindings.Add("FieldName", selectedFieldInfo, "Name", false, DataSourceUpdateMode.OnPropertyChanged);
         }
 
@@ -34,11 +51,7 @@ namespace TestDataGenerator
         private int selectedFieldInfoIndex = -1;
         private EMouseActions eAction = EMouseActions.eNone;
         private Rectangle originalRect;
-
-        private struct SelectedFieldInfo
-        {
-            int index;
-        }
+        private Size paperSize = PaperSizes.A4;
         #endregion
 
         #region Enumarations
@@ -400,6 +413,23 @@ namespace TestDataGenerator
                     }
                 }
 
+        }
+
+        private void MainView_Resize(object sender, EventArgs e)
+        {
+            //customPanel1.Location
+
+            Size clientSize = panel1.ClientSize;
+            clientSize.Width -= 2; // remove 1 pixel on each side
+            clientSize.Height -= 2; // remove 1 pixel on each side
+
+
+            int width = (int)((double)clientSize.Height * paperSize.Width / paperSize.Height + 0.5);
+            int height = panel1.ClientSize.Height - 2;
+
+            customPanel1.Left = clientSize.Width / 2 - width / 2;
+            customPanel1.Top = 0;
+            customPanel1.ClientSize = new Size(width, height);
         }
     }
 }

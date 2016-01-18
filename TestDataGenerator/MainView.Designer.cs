@@ -49,12 +49,16 @@
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.radioButtonText = new System.Windows.Forms.RadioButton();
             this.radioButtonImage = new System.Windows.Forms.RadioButton();
-            this.customPanel1 = new TestDataGenerator.CustomPanel();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.customPanel1 = new TestDataGenerator.CustomPanel();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -115,9 +119,9 @@
             // listBoxFieldInformation
             // 
             this.listBoxFieldInformation.FormattingEnabled = true;
-            this.listBoxFieldInformation.Location = new System.Drawing.Point(559, 27);
+            this.listBoxFieldInformation.Location = new System.Drawing.Point(559, 79);
             this.listBoxFieldInformation.Name = "listBoxFieldInformation";
-            this.listBoxFieldInformation.Size = new System.Drawing.Size(141, 550);
+            this.listBoxFieldInformation.Size = new System.Drawing.Size(141, 498);
             this.listBoxFieldInformation.TabIndex = 5;
             this.listBoxFieldInformation.SelectedValueChanged += new System.EventHandler(this.listBoxFieldInformation_SelectedValueChanged);
             // 
@@ -220,7 +224,7 @@
             this.flowLayoutPanel2.Controls.Add(this.radioButtonImage);
             this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 133);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(186, 25);
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(186, 26);
             this.flowLayoutPanel2.TabIndex = 7;
             // 
             // radioButtonText
@@ -245,36 +249,73 @@
             this.radioButtonImage.Text = "Image";
             this.radioButtonImage.UseVisualStyleBackColor = true;
             // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            this.openFileDialog1.Filter = "Excel 2013|*.xlsx|Excel 2007|*.xls";
+            // 
+            // panel1
+            // 
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.customPanel1);
+            this.panel1.Location = new System.Drawing.Point(13, 28);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(540, 549);
+            this.panel1.TabIndex = 8;
+            // 
             // customPanel1
             // 
+            this.customPanel1.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.customPanel1.BackColor = System.Drawing.Color.White;
             this.customPanel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.customPanel1.Location = new System.Drawing.Point(13, 27);
+            this.customPanel1.Location = new System.Drawing.Point(121, 34);
             this.customPanel1.Name = "customPanel1";
-            this.customPanel1.Size = new System.Drawing.Size(540, 550);
+            this.customPanel1.Size = new System.Drawing.Size(309, 493);
             this.customPanel1.TabIndex = 4;
             this.customPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             this.customPanel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseDown);
             this.customPanel1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseMove);
             this.customPanel1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseUp);
             // 
-            // openFileDialog1
+            // comboBox1
             // 
-            this.openFileDialog1.FileName = "openFileDialog1";
-            this.openFileDialog1.Filter = "Excel 2013|*.xlsx|Excel 2007|*.xls";
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Items.AddRange(new object[] {
+            "A4",
+            "Letter"});
+            this.comboBox1.Location = new System.Drawing.Point(559, 47);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(140, 21);
+            this.comboBox1.TabIndex = 9;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(560, 28);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(58, 13);
+            this.label5.TabIndex = 10;
+            this.label5.Text = "Paper Size";
             // 
             // MainView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(921, 605);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.comboBox1);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.listBoxFieldInformation);
-            this.Controls.Add(this.customPanel1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainView";
             this.Text = "Test Data Generator";
+            this.Resize += new System.EventHandler(this.MainView_Resize);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.groupBox1.ResumeLayout(false);
@@ -282,6 +323,7 @@
             this.flowLayoutPanel1.PerformLayout();
             this.flowLayoutPanel2.ResumeLayout(false);
             this.flowLayoutPanel2.PerformLayout();
+            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -312,6 +354,9 @@
         private System.Windows.Forms.ToolStripMenuItem loadToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.Label label5;
     }
 }
 

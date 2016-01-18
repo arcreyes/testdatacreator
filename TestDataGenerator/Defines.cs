@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 
 namespace TestDataGenerator
@@ -25,8 +26,15 @@ namespace TestDataGenerator
         eRight
     }
 
+    public static class PaperSizes
+    {
+        public static Size A4 = new Size(595, 892);
+        public static Size Letter = new Size(612, 792);
+    }
+
     public static class Converter
     {
+
         public static string EFieldTypeToString(EFieldType eFieldType)
         {
             string str = string.Empty;
