@@ -140,6 +140,18 @@ namespace TestDataGenerator
                 return "No";
             }
         }
+
+        public static bool Yes(string yes)
+        {
+            if (yes == "Yes")
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 
 }

@@ -18,8 +18,6 @@ namespace TestDataGenerator
 
             fieldInformationList = new BindingList<FieldInformation>();
 
-            listBoxFieldInformation.DisplayMember = "FieldName";
-            listBoxFieldInformation.ValueMember = "FieldName";
             listBoxFieldInformation.DataSource = fieldInformationList;
 
 
@@ -321,6 +319,7 @@ namespace TestDataGenerator
             if (result == DialogResult.OK)
             {
                 DataSet ds = Excel.Read(openFileDialog1.FileName);
+                ConvertDataSetToFieldInformationList(ds);
             }
         }
 
@@ -411,8 +410,6 @@ namespace TestDataGenerator
                     autofit = Converter.GetYesNo(fieldImage.AutoFit);
                 }
 
-                red = 0.25;
-
                 table.Rows.Add(index,
                     fieldInfo.FieldName,
                     fieldInfo.Position.Left,
@@ -452,19 +449,29 @@ namespace TestDataGenerator
 
             foreach (DataTable table in ds.Tables)
             {
-                string colName = string.Empty;
-
-                int no = -1;
-                string fieldName = string.Empty;
-                float left = -1;
-                float top = -1;
-                float right = -1;
-                float bottom = -1;
-                EAlignment eAlignment = EAlignment.eLeft;
-                EFieldType eFieldType = EFieldType.eFieldText;
-
                 for (int row = 0; row < table.Rows.Count; row++)
                 {
+                    string colName = string.Empty;
+
+                    int no = -1;
+                    string fieldName = string.Empty;
+                    float left = -1;
+                    float top = -1;
+                    float right = -1;
+                    float bottom = -1;
+                    EUnit eUnit = EUnit.ePSPoint;
+                    EAlignment eAlignment = EAlignment.eLeft;
+                    EFieldType eFieldType = EFieldType.eFieldText;
+
+                    string fontName = string.Empty;
+                    double fontSize = 0.0;
+                    TextColor color = new TextColor();
+
+                    bool bold = false;
+                    bool italic = false;
+                    bool underline = false;
+                    bool autofit = false;
+
                     for (int col = 0; col < table.Rows.Count; col++)
                     {
                         switch (table.Columns[col].ColumnName)
@@ -487,11 +494,61 @@ namespace TestDataGenerator
                             case "Bottom":
                                 bottom = float.Parse(table.Rows[row][col].ToString());
                                 break;
+                            case "Unit":
+                                //TODO
+                                eUnit = EUnit.ePSPoint;
+                                break;
                             case "Alignment":
                                 eAlignment = Converter.StringToEAlignment(table.Rows[row][col].ToString());
                                 break;
                             case "Field Type":
                                 eFieldType = Converter.StringToEFieldType(table.Rows[row][col].ToString());
+                                break;
+                            case "Font Name":
+                                fontName = table.Rows[row][col].ToString();
+                                break;
+                            case "Font Size":
+                                fontSize = (double)table.Rows[row][col];
+                                break;
+                            case "Color":
+                                //TODO
+                                color.ColorNamespace = EColorNamespace.eRGB;
+                                break;
+                            case "Red":
+                                color.Red = (double)table.Rows[row][col];
+                                break;
+                            case "Green":
+                                color.Green = (double)table.Rows[row][col];
+                                break;
+                            case "Blue":
+                                color.Blue = (double)table.Rows[row][col];
+                                break;
+                            case "Cyan":
+                                color.Cyan = (double)table.Rows[row][col];
+                                break;
+                            case "Magenta":
+                                color.Magenta = (double)table.Rows[row][col];
+                                break;
+                            case "Yellow":
+                                color.Yellow = (double)table.Rows[row][col];
+                                break;
+                            case "Black":
+                                color.Black = (double)table.Rows[row][col];
+                                break;
+                            case "Gray":
+                                color.Gray = (double)table.Rows[row][col];
+                                break;
+                            case "Bold":
+                                bold = Converter.Yes(table.Rows[row][col].ToString());
+                                break;
+                            case "Italic":
+                                italic = Converter.Yes(table.Rows[row][col].ToString());
+                                break;
+                            case "Underline":
+                                underline = Converter.Yes(table.Rows[row][col].ToString());
+                                break;
+                            case "Auto Fit":
+                                autofit = Converter.Yes(table.Rows[row][col].ToString());
                                 break;
                             default:
                                 break;
@@ -503,15 +560,33 @@ namespace TestDataGenerator
                         FieldText fieldText = new FieldText(fieldName);
 
                         fieldText.Position = RectangleF.FromLTRB(left, top, right, bottom);
+                        fieldText.Unit = eUnit;
                         fieldText.Alignment = eAlignment;
+
+                        fieldText.FontName = fontName;
+                        fieldText.FontSize = fontSize;
+                        fieldText.Color = color;
+
+                        fieldText.Bold = bold;
+                        fieldText.Italic = italic;
+                        fieldText.Underline = underline;
+
+                        fieldInformationList.Add(fieldText);
                     }
                     else if (eFieldType == EFieldType.eFieldImage)
                     {
                         FieldImage fieldImage = new FieldImage(fieldName);
 
                         fieldImage.Position = RectangleF.FromLTRB(left, top, right, bottom);
+                        fieldImage.Unit = eUnit;
                         fieldImage.Alignment = eAlignment;
+
+                        fieldImage.AutoFit = autofit;
+
+                        fieldInformationList.Add(fieldImage);
                     }
+
+                    
                 }
             }
         }

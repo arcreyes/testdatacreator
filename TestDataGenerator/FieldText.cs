@@ -16,7 +16,7 @@ namespace TestDataGenerator
 
         #region Properties
         public string FontName { get; set; }
-        public int FontSize { get; set; }
+        public double FontSize { get; set; }
         public TextColor Color { get; set; }
         public bool Bold { get; set; }
         public bool Italic { get; set; }
