@@ -26,6 +26,13 @@ namespace TestDataGenerator
         eRight
     }
 
+    public enum EUnit
+    {
+        ePSPoint,
+        eMm,
+        eInch
+    };
+
     public static class PaperSizes
     {
         public static Size A4 = new Size(595, 892);
@@ -34,7 +41,6 @@ namespace TestDataGenerator
 
     public static class Converter
     {
-
         public static string EFieldTypeToString(EFieldType eFieldType)
         {
             string str = string.Empty;
@@ -57,6 +63,28 @@ namespace TestDataGenerator
             return str;
         }
 
+        public static EFieldType StringToEFieldType(string fieldType)
+        {
+            EFieldType e = EFieldType.eFieldText;
+
+            switch (fieldType)
+            {
+                case "Text":
+                    e = EFieldType.eFieldText;
+                    break;
+                case "Image":
+                    e = EFieldType.eFieldImage;
+                    break;
+                case "Path":
+                    e = EFieldType.eFieldPath;
+                    break;
+                default:
+                    break;
+            }
+
+            return e;
+        }
+
         public static string EAlignmentToString(EAlignment eAlignment)
         {
             string str = string.Empty;
@@ -77,6 +105,40 @@ namespace TestDataGenerator
             }
 
             return str;
+        }
+
+        public static EAlignment StringToEAlignment(string alignment)
+        {
+            EAlignment e = EAlignment.eLeft;
+
+            switch (alignment)
+            {
+                case "Left":
+                    e = EAlignment.eLeft;
+                    break;
+                case "Center":
+                    e = EAlignment.eCenter;
+                    break;
+                case "Right":
+                    e = EAlignment.eRight;
+                    break;
+                default:
+                    break;
+            }
+
+            return e;
+        }
+
+        public static string GetYesNo(bool bBool)
+        {
+            if (bBool == true)
+            {
+                return "Yes";
+            }
+            else
+            {
+                return "No";
+            }
         }
     }
 

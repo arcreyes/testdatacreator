@@ -35,7 +35,8 @@ namespace TestDataGenerator
             }
         }
 
-        public Rectangle Position { get; set; }
+        public RectangleF Position { get; set; }
+        public EUnit Unit { get; set; }
         public EAlignment Alignment { get; set; }
         public EFieldType FieldType { get; set; }
         #endregion

@@ -50,7 +50,7 @@ namespace TestDataGenerator
         private Rectangle previewRect = Rectangle.Empty;
         private int selectedFieldInfoIndex = -1;
         private EMouseActions eAction = EMouseActions.eNone;
-        private Rectangle originalRect;
+        private RectangleF originalRect;
         private Size paperSize = PaperSizes.A4;
         #endregion
 
@@ -119,10 +119,10 @@ namespace TestDataGenerator
 
                 originalRect = fieldInformationList[selectedFieldInfoIndex].Position;
 
-                int left = Math.Abs(startPoint.X - originalRect.Left);
-                int top = Math.Abs(startPoint.Y - originalRect.Top);
+                int left = Math.Abs(startPoint.X - (int)originalRect.Left);
+                int top = Math.Abs(startPoint.Y - (int)originalRect.Top);
 
-                Rectangle controlRect = new Rectangle(Point.Empty, customPanel1.ClientSize - originalRect.Size);
+                Rectangle controlRect = new Rectangle(Point.Empty, customPanel1.ClientSize - new Size((int)originalRect.Size.Width, (int)originalRect.Size.Height));
                 controlRect.Offset(left, top);
 
                 Rectangle screenRect = customPanel1.RectangleToScreen(controlRect);
@@ -148,7 +148,7 @@ namespace TestDataGenerator
                     int x = endPoint.X - startPoint.X;
                     int y = endPoint.Y - startPoint.Y;
 
-                    Rectangle rect = fieldInformationList[selectedFieldInfoIndex].Position;
+                    RectangleF rect = fieldInformationList[selectedFieldInfoIndex].Position;
                     rect.Offset(x, y);
                     fieldInformationList[selectedFieldInfoIndex].Position = rect;
 
@@ -274,7 +274,7 @@ namespace TestDataGenerator
             }
         }
 
-        private bool IntersectsWithFieldInformation(Rectangle rect, int ignoreIndex = -1)
+        private bool IntersectsWithFieldInformation(RectangleF rect, int ignoreIndex = -1)
         {
             bool bIntersects = false;
 
@@ -299,7 +299,7 @@ namespace TestDataGenerator
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
 
-            saveFileDialog.Filter = "Excel 2013 (.xlsx)| *.xlsx | Excel 2003 (.xls) |*.xls ";
+            saveFileDialog.Filter = "Excel 2013 (.xlsx)|*.xlsx|Excel 2003 (.xls)|*.xls";
             saveFileDialog.DefaultExt = "xlsx";
 
             DialogResult result = saveFileDialog.ShowDialog();
@@ -314,7 +314,7 @@ namespace TestDataGenerator
 
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string filePath = Directory.GetCurrentDirectory() + "\\" + "test.xlsx";
+            string filePath = Path.Combine(Directory.GetCurrentDirectory(), "test.xlsx");
 
             DialogResult result = openFileDialog1.ShowDialog();
 
@@ -322,8 +322,6 @@ namespace TestDataGenerator
             {
                 DataSet ds = Excel.Read(openFileDialog1.FileName);
             }
-
-            
         }
 
         private DataSet ConvertFieldInformationListToDataSet()
@@ -334,24 +332,111 @@ namespace TestDataGenerator
 
             table.Columns.Add("No#", typeof(int));
             table.Columns.Add("Field Name", typeof(string));
-            table.Columns.Add("Left", typeof(int));
-            table.Columns.Add("Top", typeof(int));
-            table.Columns.Add("Right", typeof(int));
-            table.Columns.Add("Bottom", typeof(int));
+            table.Columns.Add("Left", typeof(float));
+            table.Columns.Add("Top", typeof(float));
+            table.Columns.Add("Right", typeof(float));
+            table.Columns.Add("Bottom", typeof(float));
+            table.Columns.Add("Unit", typeof(string));
             table.Columns.Add("Alignment", typeof(string));
             table.Columns.Add("Field Type", typeof(string));
+            table.Columns.Add("Font Name", typeof(string));
+            table.Columns.Add("Font Size", typeof(int));
+            table.Columns.Add("Color", typeof(string));
+            table.Columns.Add("Red", typeof(double));
+            table.Columns.Add("Green", typeof(double));
+            table.Columns.Add("Blue", typeof(double));
+            table.Columns.Add("Cyan", typeof(double));
+            table.Columns.Add("Magenta", typeof(double));
+            table.Columns.Add("Yellow", typeof(double));
+            table.Columns.Add("Black", typeof(double));
+            table.Columns.Add("Gray", typeof(double));
+            table.Columns.Add("Bold", typeof(string));
+            table.Columns.Add("Italic", typeof(string));
+            table.Columns.Add("Underline", typeof(string));
+            table.Columns.Add("Auto Fit", typeof(string));
 
-            int index = 0;
+
+
+            int index = 1;
             foreach (FieldInformation fieldInfo in fieldInformationList)
             {
-                table.Rows.Add(index, 
-                    fieldInfo.FieldName, 
-                    fieldInfo.Position.Left, 
+                string fontName = string.Empty;
+                double fontSize = 0.0;
+                double red = 0.0;
+                double green = 0.0;
+                double blue = 0.0;
+                double cyan = 0.0;
+                double magenta = 0.0;
+                double yellow = 0.0;
+                double black = 0.0;
+                double gray = 0.0;
+                string bold = "No";
+                string italic = "No";
+                string underline = "No";
+                string autofit = "No";
+
+                if (fieldInfo.FieldType == EFieldType.eFieldText)
+                {
+                    FieldText fieldText = fieldInfo as FieldText;
+
+                    fontName = fieldText.FontName;
+                    fontSize = fieldText.FontSize;
+
+                    if (fieldText.Color.ColorNamespace == EColorNamespace.eRGB)
+                    {
+                        red = fieldText.Color.Red;
+                        green = fieldText.Color.Green;
+                        blue = fieldText.Color.Blue;
+                    }
+                    else if (fieldText.Color.ColorNamespace == EColorNamespace.eCMYK)
+                    {
+                        cyan = fieldText.Color.Cyan;
+                        magenta = fieldText.Color.Magenta;
+                        yellow = fieldText.Color.Yellow;
+                        black = fieldText.Color.Black;
+                    }
+                    else if (fieldText.Color.ColorNamespace == EColorNamespace.eGray)
+                    {
+                        gray = fieldText.Color.Gray;
+                    }
+
+                    bold = Converter.GetYesNo(fieldText.Bold);
+                    italic = Converter.GetYesNo(fieldText.Italic);
+                    underline = Converter.GetYesNo(fieldText.Underline);
+                }
+                else if (fieldInfo.FieldType == EFieldType.eFieldImage)
+                {
+                    FieldImage fieldImage = fieldInfo as FieldImage;
+
+                    autofit = Converter.GetYesNo(fieldImage.AutoFit);
+                }
+
+                red = 0.25;
+
+                table.Rows.Add(index,
+                    fieldInfo.FieldName,
+                    fieldInfo.Position.Left,
                     fieldInfo.Position.Top,
                     fieldInfo.Position.Right,
                     fieldInfo.Position.Bottom,
+                    "ps",
                     Converter.EAlignmentToString(fieldInfo.Alignment),
-                    Converter.EFieldTypeToString(fieldInfo.FieldType));
+                    Converter.EFieldTypeToString(fieldInfo.FieldType),
+                    fontName,
+                    fontSize,
+                    "RGB",
+                    red,
+                    green,
+                    blue,
+                    cyan,
+                    magenta,
+                    yellow,
+                    black,
+                    gray,
+                    bold,
+                    italic,
+                    underline,
+                    autofit);
 
                 index++;
             }
@@ -363,18 +448,20 @@ namespace TestDataGenerator
 
         private void ConvertDataSetToFieldInformationList(DataSet ds)
         {
+            BindingList<FieldInformation> newFieldInformationList = new BindingList<FieldInformation>();
+
             foreach (DataTable table in ds.Tables)
             {
                 string colName = string.Empty;
 
                 int no = -1;
                 string fieldName = string.Empty;
-                int left = -1;
-                int top = -1;
-                int right = -1;
-                int bottom = -1;
-                string alignment = string.Empty;
-                string fieldType = string.Empty;
+                float left = -1;
+                float top = -1;
+                float right = -1;
+                float bottom = -1;
+                EAlignment eAlignment = EAlignment.eLeft;
+                EFieldType eFieldType = EFieldType.eFieldText;
 
                 for (int row = 0; row < table.Rows.Count; row++)
                 {
@@ -389,30 +476,44 @@ namespace TestDataGenerator
                                 fieldName = table.Rows[row][col].ToString();
                                 break;
                             case "Left":
-                                left = int.Parse(table.Rows[row][col].ToString());
+                                left = float.Parse(table.Rows[row][col].ToString());
                                 break;
                             case "Top":
-                                top = int.Parse(table.Rows[row][col].ToString());
+                                top = float.Parse(table.Rows[row][col].ToString());
                                 break;
                             case "Right":
-                                right = int.Parse(table.Rows[row][col].ToString());
+                                right = float.Parse(table.Rows[row][col].ToString());
                                 break;
                             case "Bottom":
-                                bottom = int.Parse(table.Rows[row][col].ToString());
+                                bottom = float.Parse(table.Rows[row][col].ToString());
                                 break;
                             case "Alignment":
-                                alignment = table.Rows[row][col].ToString();
+                                eAlignment = Converter.StringToEAlignment(table.Rows[row][col].ToString());
                                 break;
                             case "Field Type":
-                                fieldType = table.Rows[row][col].ToString();
+                                eFieldType = Converter.StringToEFieldType(table.Rows[row][col].ToString());
                                 break;
                             default:
                                 break;
                         }
                     }
+
+                    if (eFieldType == EFieldType.eFieldText)
+                    {
+                        FieldText fieldText = new FieldText(fieldName);
+
+                        fieldText.Position = RectangleF.FromLTRB(left, top, right, bottom);
+                        fieldText.Alignment = eAlignment;
+                    }
+                    else if (eFieldType == EFieldType.eFieldImage)
+                    {
+                        FieldImage fieldImage = new FieldImage(fieldName);
+
+                        fieldImage.Position = RectangleF.FromLTRB(left, top, right, bottom);
+                        fieldImage.Alignment = eAlignment;
                     }
                 }
-
+            }
         }
 
         private void MainView_Resize(object sender, EventArgs e)

@@ -15,6 +15,30 @@ namespace TestDataGenerator
             eXLSX
         };
 
+        private static string GetSQLDataType(Type type)
+        {
+            string dataType = string.Empty;
+
+            if (type == typeof(int))
+            {
+                dataType = "INT";
+            }
+            else if (type == typeof(string))
+            {
+                dataType = "VARCHAR";
+            }
+            else if (type == typeof(float))
+            {
+                dataType = "FLOAT";
+            }
+            else if (type == typeof(double))
+            {
+                dataType = "DOUBLE";
+            }
+
+            return dataType;
+        }
+
         public static int Write(DataSet dataSet, string filePath)
         {
             return Write(dataSet, filePath, GetVersion(filePath));
@@ -41,14 +65,9 @@ namespace TestDataGenerator
                     {
                         colIdCollection += "[" + table.Columns[col].ColumnName + "]";
 
-                        string varType = "VARCHAR";
-                        
-                        if (table.Columns[col].DataType == typeof(int))
-                        {
-                            varType = "INT";
-                        }
+                        string sqlDataType = GetSQLDataType(table.Columns[col].DataType);
 
-                        colValueCollection += "[" + table.Columns[col].ColumnName + "]" + " " + varType;
+                        colValueCollection += "[" + table.Columns[col].ColumnName + "]" + " " + sqlDataType;
 
                         if (col + 1 < table.Columns.Count)
                         { 
@@ -61,7 +80,7 @@ namespace TestDataGenerator
                     cmd.CommandText = "CREATE TABLE [" + tableName + "] (" + colValueCollection + ");";
                     cmd.ExecuteNonQuery();
 
-
+                    //CREATE TABLE [fieldinfo] ([No#] INT,[Field Name] VARCHAR,[Left] INT,[Top] INT,[Right] INT,[Bottom] INT,[Unit] VARCHAR,[Alignment] VARCHAR,[Field Type] VARCHAR,[Font Name] VARCHAR,[Font Size] INT,[Color] VARCHAR,[Red] INT,[Green] INT,[Blue] INT,[Cyan] INT,[Magenta] INT,[Yellow] INT,[Black] INT,[Gray] INT,[Bold	] VARCHAR,[Italic] VARCHAR,[Underline] VARCHAR,[Auto Fit] VARCHAR);
 
                     for (int row = 0; row < table.Rows.Count; row++)
                     {
